@@ -27,6 +27,7 @@
       <button class="showZombieButton">👁️ MY ZOMBIES</button>
       <button class="feedKittyButton">🐱 FEED ON KITTY</button>
       <button class="levelupButton">⚡ LEVEL UP</button>
+      <button class="attackButton">⚔️ BATTLE</button>
     </div>
 
     <div id="txStatus"></div>
@@ -70,6 +71,27 @@
       <div class="modal-buttons">
         <button class="btn-cancel" onclick="closeFeedKittyModal()">CANCEL</button>
         <button class="btn-submit" onclick="submitFeedKitty()">FEED & BREED</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="attackModal" class="modal">
+    <div class="modal-content">
+      <h2>⚔️ ZOMBIE BATTLE</h2>
+      <p style="text-align: center; color: #ff0080; margin-bottom: 20px;">Attack another zombie! 70% chance to win and
+        create a new zombie!</p>
+      <input type="number" id="attackerZombieId" placeholder="Enter Your Zombie ID..." min="0">
+      <input type="number" id="targetZombieId" placeholder="Enter Target Zombie ID..." min="0">
+      <div
+        style="background: rgba(255, 0, 128, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9em;">
+        <strong style="color: #ff0080;">Battle Rules:</strong><br>
+        ⚔️ 70% chance to WIN<br>
+        ✅ Win: +1 Level, +1 Win, Create new zombie<br>
+        ❌ Lose: +1 Loss, Cooldown period
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeAttackModal()">CANCEL</button>
+        <button class="btn-submit" onclick="submitAttack()">ATTACK!</button>
       </div>
     </div>
   </div>

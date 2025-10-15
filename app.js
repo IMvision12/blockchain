@@ -4,6 +4,7 @@ const showZombieButton = document.querySelector('.showZombieButton');
 const createzombieButton = document.querySelector('.createzombieButton');
 const feedKittyButton = document.querySelector('.feedKittyButton');
 const levelupButton = document.querySelector('.levelupButton');
+const attackButton = document.querySelector('.attackButton');
 
 function startApp() {
     var cryptoZombiesAddress = "0x55fc6f88568d68Ad1Ee7337CE3BE7343745cff9a"
@@ -181,6 +182,46 @@ function submitFeedKitty() {
     }
 }
 
+function attack(attackerZombieId, targetZombieId) {
+    $("#txStatus").html("⚔️ ZOMBIE #" + attackerZombieId + " ATTACKING ZOMBIE #" + targetZombieId + "...").addClass("loading");
+    return cryptoZombies.methods.attack(attackerZombieId, targetZombieId)
+        .send({ from: userAccount })
+        .on("receipt", function (receipt) {
+            $("#txStatus").html("⚔️ BATTLE COMPLETE! Check your zombies for results!").removeClass("loading");
+            getZombiesByOwner(userAccount).then(displayZombies);
+        })
+        .on("error", function (error) {
+            $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
+        });
+}
+
+function openAttackModal() {
+    document.getElementById('attackModal').classList.add('active');
+    document.getElementById('attackerZombieId').focus();
+}
+
+function closeAttackModal() {
+    document.getElementById('attackModal').classList.remove('active');
+    document.getElementById('attackerZombieId').value = '';
+    document.getElementById('targetZombieId').value = '';
+}
+
+function submitAttack() {
+    var attackerZombieId = document.getElementById('attackerZombieId').value;
+    var targetZombieId = document.getElementById('targetZombieId').value;
+
+    if (attackerZombieId !== "" && targetZombieId !== "") {
+        if (attackerZombieId === targetZombieId) {
+            alert('You cannot attack your own zombie!');
+            return;
+        }
+        closeAttackModal();
+        attack(parseInt(attackerZombieId), parseInt(targetZombieId));
+    } else {
+        alert('Please enter both Attacker and Target Zombie IDs!');
+    }
+}
+
 // Add Enter key support for input fields only
 document.getElementById('zombieName').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -207,6 +248,20 @@ document.getElementById('feedZombieId').addEventListener('keypress', function (e
     if (e.key === 'Enter') {
         e.preventDefault();
         submitFeedKitty();
+    }
+});
+
+document.getElementById('attackerZombieId').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        submitAttack();
+    }
+});
+
+document.getElementById('targetZombieId').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        submitAttack();
     }
 });
 
@@ -248,3 +303,5 @@ showZombieButton.addEventListener('click', () => {
 feedKittyButton.addEventListener('click', openFeedKittyModal);
 
 levelupButton.addEventListener('click', openLevelupModal);
+
+attackButton.addEventListener('click', openAttackModal);

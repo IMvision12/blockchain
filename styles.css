@@ -211,6 +211,18 @@ button:hover::before {
   transform: translateY(-3px);
 }
 
+.attackButton {
+  background: linear-gradient(135deg, #ff0080 0%, #8b00ff 100%);
+  border-color: #ff0080;
+  color: white;
+  box-shadow: 0 0 20px rgba(255, 0, 128, 0.5);
+}
+
+.attackButton:hover {
+  box-shadow: 0 0 40px rgba(255, 0, 128, 0.8);
+  transform: translateY(-3px);
+}
+
 #txStatus {
   text-align: center;
   padding: 20px;

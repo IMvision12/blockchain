@@ -288,6 +288,7 @@ function createRandomZombie(string _name) public {
 - 🎁 Reward system for battles
 - 🎮 Mini-games with zombies
 - 🧬 Advanced breeding with multiple traits
+- 🐱 **Real CryptoKitties Integration** - Replace mock contract with actual CryptoKitties contract on mainnet/testnet for authentic cross-contract interactions
 
 ## 📄 License
 
