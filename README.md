@@ -281,6 +281,32 @@ function createRandomZombie(string _name) public {
 - Kitty #3: DNA 1111111111111111
 - Kitty #4: DNA 9999999999999999
 
+### 6. Zombie Battle System
+- **PvP Combat** - Zombies can attack each other in epic battles
+- **70% Win Rate** - Attacker has 70% chance to win (random outcome)
+- **Win Rewards** - Victory grants +1 level, +1 win count, and creates a NEW zombie with mixed DNA
+- **Loss Penalty** - Defeat gives +1 loss count and triggers 5-second cooldown
+- **DNA Breeding** - Winning battles mixes DNA from both zombies to create offspring
+- **Army Growth** - Build your zombie army through conquest
+- **Battle Modal** - Beautiful UI for selecting attacker and target zombies
+- **Real-time Stats** - Win/loss counts update automatically after each battle
+- **Strategic Gameplay** - Choose your battles wisely to grow your collection
+
+**Battle Mechanics:**
+```
+🎲 Random Outcome (70/30 split)
+✅ WIN: +1 Level, +1 Win, New Zombie Created, Enemy +1 Loss
+❌ LOSE: +1 Loss, 5s Cooldown, Enemy +1 Win
+```
+
+**How to Battle:**
+1. Click **⚔️ BATTLE** button
+2. Enter your zombie's ID (attacker)
+3. Enter target zombie's ID (defender)
+4. Confirm transaction in MetaMask
+5. Wait for battle result
+6. Check your zombies - stats and new zombie (if won) will appear!
+
 ### Future Enhancement Ideas:
 - ⚔️ Zombie battle mechanics
 - 🏪 Zombie marketplace for trading
