@@ -88,21 +88,6 @@ npx browser-sync start --server --files "*.html, *.js, *.css"
 
 The app will open at `http://localhost:3000`
 
-## 🎮 How to Use
-
-### Create a Zombie
-1. Click **"🧬 Create Zombie"**
-2. Enter a name in the modal
-3. Approve the transaction in MetaMask
-4. Wait for confirmation (~5 seconds)
-
-**Note:** Each account can only create ONE zombie!
-
-### View Your Zombies
-- Click **"👁️ Show My Zombies"** to display all your zombies
-
-### Level Up
-- Click **"⚡ Level Up"** to upgrade your zombie (costs 0.001 ETH)
 
 ## 🔄 Redeploying Contracts
 
@@ -114,22 +99,6 @@ truffle migrate --reset --network development
 
 **Remember to update the contract address in `index.html` after redeploying!**
 
-## 🛠️ Project Structure
-
-```
-blockchain/
-├── contracts/           # Solidity smart contracts
-│   ├── zombiefactory.sol
-│   ├── zombiefeeding.sol
-│   ├── zombiehelper.sol
-│   ├── zombieattack.sol
-│   └── zombieownership.sol
-├── migrations/          # Deployment scripts
-├── build/              # Compiled contracts (auto-generated)
-├── index.html          # Frontend UI
-├── cryptozombies_abi.js # Contract ABI
-└── truffle-config.js   # Truffle configuration
-```
 
 ## ⚙️ Configuration
 
@@ -149,73 +118,6 @@ compilers: {
   }
 }
 ```
-
-## 🐛 Troubleshooting
-
-### Error: "Internal JSON-RPC error"
-- **Cause:** You already created a zombie with this account (limit: 1 per account)
-- **Solution:** Import a different Ganache account into MetaMask
-
-### Error: "Network ID mismatch"
-- **Cause:** MetaMask is on wrong network
-- **Solution:** Switch MetaMask to "Ganache Local" (Chain ID: 1337)
-
-### Error: "Contract not deployed"
-- **Cause:** Contract address in HTML doesn't match deployed address
-- **Solution:** Redeploy contracts and update address in `index.html`
-
-### Ganache Restarted
-- **Solution:** Run `truffle migrate --reset` and update contract address
-
-### MetaMask Shows $0.00
-- **Normal:** USD conversion doesn't work for local networks
-- **Check:** You should still see ETH balance (e.g., "99.98 ETH")
-
-## 📝 Smart Contract Details
-
-### ZombieFactory
-- Create zombies with unique DNA
-- Limit: 1 zombie per address
-
-### ZombieFeeding
-- Feed zombies to create new ones
-- Interact with CryptoKitties
-
-### ZombieHelper
-- Level up zombies (costs 0.001 ETH)
-- Change zombie names
-
-### ZombieAttack
-- Battle other zombies
-- Win/loss tracking
-
-### ZombieOwnership
-- ERC721 compliant NFT
-- Transfer and trade zombies
-
-## 📚 Additional Commands
-
-### Run Tests
-```cmd
-truffle test
-```
-
-### Open Truffle Console
-```cmd
-truffle console --network development
-```
-
-### Check Contract Size
-```cmd
-truffle compile --all
-```
-
-## 🔗 Useful Links
-
-- [Truffle Documentation](https://trufflesuite.com/docs/truffle/)
-- [Solidity Documentation](https://docs.soliditylang.org/)
-- [Web3.js Documentation](https://web3js.readthedocs.io/)
-- [MetaMask Documentation](https://docs.metamask.io/)
 
 ## 🚀 Improvements & Custom Features
 
@@ -243,20 +145,6 @@ This project includes several enhancements beyond the standard CryptoZombies tut
 - **Enhanced Experience** - More engaging and fun for users
 - **Future-Ready** - Enables features like breeding, battles, and trading
 
-### Technical Changes Made:
-```solidity
-// Before (Original):
-function createRandomZombie(string _name) public {
-    require(ownerZombieCount[msg.sender] == 0);  // Only 1 zombie allowed
-    ...
-}
-
-// After (Improved):
-function createRandomZombie(string _name) public {
-    // Removed restriction - unlimited zombies!
-    ...
-}
-```
 
 ### 4. Visual Zombie Avatars
 - **Unique Images** - Each zombie gets a unique robot avatar generated from its DNA
