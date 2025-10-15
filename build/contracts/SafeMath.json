@@ -7613,12 +7613,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0xB84b0B022075B79ebB2c3Ae7Fc305F8C83C2c2b5",
-      "transactionHash": "0x028d01126b6bda294876fa81f23834d84a29f5d9890095c4e4f3daebbe3fa039"
+      "address": "0xbc43Af59bc38084E9d2442Dc0c14Fe57E5031021",
+      "transactionHash": "0xc821a22c9073737bef8e0c9a28ffe1b3818105dceff01521b9582e0ef97bba0d"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2025-10-15T21:46:54.256Z",
+  "updatedAt": "2025-10-15T21:57:34.948Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {},
