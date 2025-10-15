@@ -258,13 +258,36 @@ function createRandomZombie(string _name) public {
 }
 ```
 
+### 4. Visual Zombie Avatars
+- **Unique Images** - Each zombie gets a unique robot avatar generated from its DNA
+- **DNA-Based Generation** - Uses DiceBear API to create consistent avatars based on zombie DNA
+- **Circular Avatar Display** - Beautiful circular frames with neon glow effects
+- **Name Badges** - Prominent display of zombie names with glowing text
+- **Hover Effects** - Avatars scale and glow when hovering over zombie cards
+- **Better Visual Identity** - Easy to distinguish between different zombies at a glance
+
+### 5. Mock CryptoKitties Contract
+- **Testing Environment** - Mock CryptoKitties contract for local testing on Ganache
+- **Pre-loaded Kitties** - 5 mock kitties with different DNA (IDs: 0-4)
+- **Feed on Kitty Function** - Zombies can "eat" kitties to create hybrid zombies
+- **DNA Mixing** - New zombies inherit DNA from both parent zombie and kitty
+- **Cat-Zombie Hybrids** - Special zombies with DNA ending in "99"
+- **Inter-Contract Communication** - Demonstrates how contracts interact with each other
+
+**Available Mock Kitties:**
+- Kitty #0: DNA 1234567890123456
+- Kitty #1: DNA 9876543210987654
+- Kitty #2: DNA 5555555555555555
+- Kitty #3: DNA 1111111111111111
+- Kitty #4: DNA 9999999999999999
+
 ### Future Enhancement Ideas:
-- 🔄 Zombie breeding system
 - ⚔️ Zombie battle mechanics
 - 🏪 Zombie marketplace for trading
-- 🎨 Visual zombie avatars based on DNA
 - 📊 Leaderboard and statistics
 - 🎁 Reward system for battles
+- 🎮 Mini-games with zombies
+- 🧬 Advanced breeding with multiple traits
 
 ## 📄 License
 

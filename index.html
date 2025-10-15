@@ -200,6 +200,18 @@
       transform: translateY(-3px);
     }
 
+    .feedKittyButton {
+      background: linear-gradient(135deg, #ff6b9d 0%, #ffa500 100%);
+      border-color: #ff6b9d;
+      color: white;
+      box-shadow: 0 0 20px rgba(255, 107, 157, 0.5);
+    }
+
+    .feedKittyButton:hover {
+      box-shadow: 0 0 40px rgba(255, 107, 157, 0.8);
+      transform: translateY(-3px);
+    }
+
     .levelupButton {
       background: linear-gradient(135deg, #00ff88 0%, #00d4ff 100%);
       border-color: #00ff88;
@@ -284,6 +296,81 @@
     .zombie li strong {
       color: #00ff88;
       text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+    }
+
+    .zombie-avatar {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 20px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 3px solid rgba(0, 255, 136, 0.5);
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.4);
+      background: linear-gradient(135deg, rgba(120, 0, 255, 0.3) 0%, rgba(255, 0, 150, 0.3) 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    .zombie-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .zombie:hover .zombie-avatar {
+      border-color: rgba(255, 0, 150, 0.8);
+      box-shadow: 0 0 50px rgba(255, 0, 150, 0.6);
+      transform: scale(1.05);
+      transition: all 0.3s ease;
+    }
+
+    .zombie-name-badge {
+      text-align: center;
+      font-size: 1.5em;
+      font-weight: 900;
+      color: #00ff88;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+      padding: 10px;
+      background: rgba(0, 255, 136, 0.1);
+      border-radius: 10px;
+      border: 1px solid rgba(0, 255, 136, 0.3);
+      text-shadow: 0 0 15px rgba(0, 255, 136, 0.8);
+      position: relative;
+      z-index: 2;
+    }
+
+    .hybrid-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: linear-gradient(135deg, #ff6b9d 0%, #ffa500 100%);
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.8em;
+      font-weight: 700;
+      text-transform: uppercase;
+      box-shadow: 0 0 20px rgba(255, 107, 157, 0.6);
+      z-index: 3;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    .zombie.hybrid {
+      border-color: rgba(255, 107, 157, 0.6);
+      box-shadow:
+        0 10px 40px rgba(0, 0, 0, 0.5),
+        0 0 40px rgba(255, 107, 157, 0.4);
+    }
+
+    .zombie.hybrid:hover {
+      border-color: rgba(255, 107, 157, 0.9);
+      box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.7),
+        0 0 60px rgba(255, 107, 157, 0.7);
     }
 
     .empty-state {
@@ -450,6 +537,7 @@
     <div class="controls">
       <button class="createzombieButton">🧬 CREATE ZOMBIE</button>
       <button class="showZombieButton">👁️ MY ZOMBIES</button>
+      <button class="feedKittyButton">🐱 FEED ON KITTY</button>
       <button class="levelupButton">⚡ LEVEL UP</button>
     </div>
 
@@ -479,15 +567,35 @@
     </div>
   </div>
 
+  <div id="feedKittyModal" class="modal">
+    <div class="modal-content">
+      <h2>🐱 FEED ON KITTY</h2>
+      <p style="text-align: center; color: #00d4ff; margin-bottom: 20px;">Create a hybrid zombie by feeding on a
+        CryptoKitty!</p>
+      <input type="number" id="feedZombieId" placeholder="Enter Your Zombie ID..." min="0">
+      <input type="number" id="feedKittyId" placeholder="Enter Kitty ID (0-4)..." min="0" max="4">
+      <div
+        style="background: rgba(0, 255, 136, 0.1); padding: 15px; border-radius: 10px; margin-bottom: 20px; font-size: 0.9em;">
+        <strong style="color: #00ff88;">Available Mock Kitties:</strong><br>
+        🐱 Kitty #0 | 🐱 Kitty #1 | 🐱 Kitty #2 | 🐱 Kitty #3 | 🐱 Kitty #4
+      </div>
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeFeedKittyModal()">CANCEL</button>
+        <button class="btn-submit" onclick="submitFeedKitty()">FEED & BREED</button>
+      </div>
+    </div>
+  </div>
+
   <script>
     var cryptoZombies;
     var userAccount;
     const showZombieButton = document.querySelector('.showZombieButton');
     const createzombieButton = document.querySelector('.createzombieButton');
+    const feedKittyButton = document.querySelector('.feedKittyButton');
     const levelupButton = document.querySelector('.levelupButton');
 
     function startApp() {
-      var cryptoZombiesAddress = "0xc3600fA3f26a8B5C2C53c5253c56F2ac1696d6c9";
+      var cryptoZombiesAddress = "0xB28DC9De3dbe0Ae9996195228CC9D9595C65BF58"
       cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
 
       cryptoZombies.events.Transfer({ filter: { _to: userAccount } })
@@ -514,10 +622,18 @@
         let zombieId = ids[i];
         getZombieDetails(zombieId)
           .then(function (zombie) {
-            $("#zombies").append(`<div class="zombie">
+            const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${zombie.dna}&backgroundColor=0a0e27,7000ff,ff0080`;
+            const isCatZombie = zombie.dna % 100 == 99;
+            const hybridBadge = isCatZombie ? '<div class="hybrid-badge">🐱 CAT-ZOMBIE HYBRID</div>' : '';
+
+            $("#zombies").append(`<div class="zombie ${isCatZombie ? 'hybrid' : ''}">
+              ${hybridBadge}
+              <div class="zombie-avatar">
+                <img src="${avatarUrl}" alt="${zombie.name}" />
+              </div>
+              <div class="zombie-name-badge">${zombie.name}</div>
               <ul>
                 <li><strong>🆔 ID:</strong> ${zombieId}</li>
-                <li><strong>🧟 NAME:</strong> ${zombie.name}</li>
                 <li><strong>🧬 DNA:</strong> ${zombie.dna}</li>
                 <li><strong>⭐ LEVEL:</strong> ${zombie.level}</li>
                 <li><strong>🏆 WINS:</strong> ${zombie.winCount}</li>
@@ -536,6 +652,19 @@
         .send({ from: userAccount })
         .on("receipt", function (receipt) {
           $("#txStatus").html("✅ ZOMBIE " + name.toUpperCase() + " CREATED!").removeClass("loading");
+          getZombiesByOwner(userAccount).then(displayZombies);
+        })
+        .on("error", function (error) {
+          $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
+        });
+    }
+
+    function feedOnKitty(zombieId, kittyId) {
+      $("#txStatus").html("🐱 FEEDING ZOMBIE #" + zombieId + " WITH KITTY #" + kittyId + "...").addClass("loading");
+      return cryptoZombies.methods.feedOnKitty(zombieId, kittyId)
+        .send({ from: userAccount })
+        .on("receipt", function (receipt) {
+          $("#txStatus").html("✅ HYBRID ZOMBIE CREATED! Check your zombies!").removeClass("loading");
           getZombiesByOwner(userAccount).then(displayZombies);
         })
         .on("error", function (error) {
@@ -604,6 +733,33 @@
       }
     }
 
+    function openFeedKittyModal() {
+      document.getElementById('feedKittyModal').classList.add('active');
+      document.getElementById('feedZombieId').focus();
+    }
+
+    function closeFeedKittyModal() {
+      document.getElementById('feedKittyModal').classList.remove('active');
+      document.getElementById('feedZombieId').value = '';
+      document.getElementById('feedKittyId').value = '';
+    }
+
+    function submitFeedKitty() {
+      var zombieId = document.getElementById('feedZombieId').value;
+      var kittyId = document.getElementById('feedKittyId').value;
+
+      if (zombieId !== "" && kittyId !== "") {
+        if (kittyId < 0 || kittyId > 4) {
+          alert('Please enter a valid Kitty ID (0-4)!');
+          return;
+        }
+        closeFeedKittyModal();
+        feedOnKitty(parseInt(zombieId), parseInt(kittyId));
+      } else {
+        alert('Please enter both Zombie ID and Kitty ID!');
+      }
+    }
+
     document.addEventListener('keypress', function (e) {
       if (e.key === 'Enter') {
         if (document.getElementById('createModal').classList.contains('active')) {
@@ -643,11 +799,25 @@
       window.location.reload();
     });
 
+    document.addEventListener('keypress', function (e) {
+      if (e.key === 'Enter') {
+        if (document.getElementById('createModal').classList.contains('active')) {
+          submitZombie();
+        } else if (document.getElementById('levelupModal').classList.contains('active')) {
+          submitLevelup();
+        } else if (document.getElementById('feedKittyModal').classList.contains('active')) {
+          submitFeedKitty();
+        }
+      }
+    });
+
     createzombieButton.addEventListener('click', openCreateModal);
 
     showZombieButton.addEventListener('click', () => {
       getZombiesByOwner(userAccount).then(displayZombies);
     });
+
+    feedKittyButton.addEventListener('click', openFeedKittyModal);
 
     levelupButton.addEventListener('click', openLevelupModal);
   </script>
