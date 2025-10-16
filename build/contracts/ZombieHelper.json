@@ -5046,12 +5046,12 @@
         }
       },
       "links": {},
-      "address": "0xb2bbB6A6dA02ac0e6142f4CdC480c99566D6b2A1",
-      "transactionHash": "0x7a0fc9533735d33aa40dcf8d56abf8c0bafcfb1553575550fd775f43d5d7f824"
+      "address": "0x3fC2fD1F80d512faC29f61C869495a91a0A43008",
+      "transactionHash": "0x2a953ce4604a51ef02d67a717a3df5e8f69cd4e4f708ca9407d0bbe871dcda9b"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2025-10-15T21:57:34.959Z",
+  "updatedAt": "2025-10-16T20:03:19.168Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {

@@ -913,12 +913,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x85a880242E4830b1e2B216Cc6DcBa62ea224876a",
-      "transactionHash": "0x8bda9bc1c2484f6369a132a9ad294f13d96d08ab6ac42b14f29c6bea4327676b"
+      "address": "0x104601De33C0D798599568b07e574063d6811359",
+      "transactionHash": "0xae87fb4a15388bc33c8869cb50ea303e6aa6c521aefa0ece8209316761ef2767"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2025-10-15T21:57:35.617Z",
+  "updatedAt": "2025-10-16T20:03:20.552Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {}

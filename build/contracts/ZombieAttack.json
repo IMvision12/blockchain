@@ -4197,12 +4197,12 @@
         }
       },
       "links": {},
-      "address": "0xEc4BC2ed6f8Fe1F46794ED4602790c0e3ef28C49",
-      "transactionHash": "0x5293415edda5fa28f8ad16d7f7b938b8fb57b882a4109ba0d26a015d347cf990"
+      "address": "0x8e46b3263E7D0fd8B793BC2F3365373D95d5BeA4",
+      "transactionHash": "0x48f97001e76a93b88f8c7ca42b3626befb5a0db421580373fb433fc09fd71f12"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2025-10-15T21:57:34.961Z",
+  "updatedAt": "2025-10-16T20:03:19.171Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {

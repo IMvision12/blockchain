@@ -1,5 +1,7 @@
 var cryptoZombies;
 var userAccount;
+var zombieParents = {}; // Store parent zombie IDs
+var battleZombies = {}; // Store battle-created zombie IDs
 const showZombieButton = document.querySelector('.showZombieButton');
 const createzombieButton = document.querySelector('.createzombieButton');
 const feedKittyButton = document.querySelector('.feedKittyButton');
@@ -7,8 +9,20 @@ const levelupButton = document.querySelector('.levelupButton');
 const attackButton = document.querySelector('.attackButton');
 
 function startApp() {
-    var cryptoZombiesAddress = "0x55fc6f88568d68Ad1Ee7337CE3BE7343745cff9a"
+    var cryptoZombiesAddress = "0xcEd509635abDC67e57C178309CDA362DA2CcB809"
     cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
+
+    // Load stored parent relationships
+    const stored = localStorage.getItem('zombieParents');
+    if (stored) {
+        zombieParents = JSON.parse(stored);
+    }
+
+    // Load stored battle zombies
+    const storedBattle = localStorage.getItem('battleZombies');
+    if (storedBattle) {
+        battleZombies = JSON.parse(storedBattle);
+    }
 
     cryptoZombies.events.Transfer({ filter: { _to: userAccount } })
         .on("data", function (event) {
@@ -36,9 +50,18 @@ function displayZombies(ids) {
             .then(function (zombie) {
                 const avatarUrl = `https://api.dicebear.com/7.x/bottts/svg?seed=${zombie.dna}&backgroundColor=0a0e27,7000ff,ff0080`;
                 const isCatZombie = zombie.dna % 100 == 99;
-                const hybridBadge = isCatZombie ? '<div class="hybrid-badge">🐱 CAT-ZOMBIE HYBRID</div>' : '';
+                const isBattleZombie = battleZombies[zombieId] !== undefined;
 
-                $("#zombies").append(`<div class="zombie ${isCatZombie ? 'hybrid' : ''}">
+                console.log(`Zombie ${zombieId}: isCat=${isCatZombie}, isBattle=${isBattleZombie}, battleZombies=`, battleZombies);
+
+                let hybridBadge = '';
+                if (isCatZombie) {
+                    hybridBadge = '<div class="hybrid-badge">🐱 CAT-ZOMBIE HYBRID</div>';
+                } else if (isBattleZombie) {
+                    hybridBadge = '<div class="hybrid-badge">⚔️ BATTLE ZOMBIE</div>';
+                }
+
+                $("#zombies").append(`<div class="zombie ${isCatZombie || isBattleZombie ? 'hybrid' : ''}">
           ${hybridBadge}
           <div class="zombie-avatar">
             <img src="${avatarUrl}" alt="${zombie.name}" />
@@ -83,15 +106,26 @@ function createRandomZombie(name) {
 
 function feedOnKitty(zombieId, kittyId) {
     $("#txStatus").html("🐱 FEEDING ZOMBIE #" + zombieId + " WITH KITTY #" + kittyId + "...").addClass("loading");
-    return cryptoZombies.methods.feedOnKitty(zombieId, kittyId)
-        .send({ from: userAccount })
-        .on("receipt", function (receipt) {
-            $("#txStatus").html("✅ HYBRID ZOMBIE CREATED! Check your zombies!").removeClass("loading");
-            getZombiesByOwner(userAccount).then(displayZombies);
-        })
-        .on("error", function (error) {
-            $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
-        });
+
+    // Get parent zombie name first
+    getZombieDetails(zombieId).then(function (parentZombie) {
+        cryptoZombies.methods.feedOnKitty(zombieId, kittyId)
+            .send({ from: userAccount })
+            .on("receipt", function (receipt) {
+                // Store parent info for the new zombie
+                getZombiesByOwner(userAccount).then(function (ids) {
+                    const newZombieId = ids[ids.length - 1]; // The newest zombie
+                    zombieParents[newZombieId] = zombieId; // Store parent ID
+                    localStorage.setItem('zombieParents', JSON.stringify(zombieParents));
+
+                    $("#txStatus").html("✅ HYBRID ZOMBIE CREATED FROM " + parentZombie.name.toUpperCase() + " (ID: " + zombieId + ")! Check your zombies!").removeClass("loading");
+                    displayZombies(ids);
+                });
+            })
+            .on("error", function (error) {
+                $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
+            });
+    });
 }
 
 function levelUp(zombieId) {
@@ -184,15 +218,36 @@ function submitFeedKitty() {
 
 function attack(attackerZombieId, targetZombieId) {
     $("#txStatus").html("⚔️ ZOMBIE #" + attackerZombieId + " ATTACKING ZOMBIE #" + targetZombieId + "...").addClass("loading");
-    return cryptoZombies.methods.attack(attackerZombieId, targetZombieId)
-        .send({ from: userAccount })
-        .on("receipt", function (receipt) {
-            $("#txStatus").html("⚔️ BATTLE COMPLETE! Check your zombies for results!").removeClass("loading");
-            getZombiesByOwner(userAccount).then(displayZombies);
-        })
-        .on("error", function (error) {
-            $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
-        });
+
+    // Get current zombie count before battle
+    getZombiesByOwner(userAccount).then(function (currentIds) {
+        const zombieCountBefore = currentIds.length;
+
+        return cryptoZombies.methods.attack(attackerZombieId, targetZombieId)
+            .send({ from: userAccount })
+            .on("receipt", function (receipt) {
+                // Check if new zombie was created
+                getZombiesByOwner(userAccount).then(function (newIds) {
+                    if (newIds.length > zombieCountBefore) {
+                        // Find the new zombie ID (the one not in the previous list)
+                        const newZombieId = newIds.find(id => !currentIds.includes(id));
+                        if (newZombieId !== undefined) {
+                            battleZombies[newZombieId] = { attacker: attackerZombieId, target: targetZombieId };
+                            localStorage.setItem('battleZombies', JSON.stringify(battleZombies));
+                            $("#txStatus").html("⚔️ VICTORY! NEW BATTLE ZOMBIE #" + newZombieId + " CREATED!").removeClass("loading");
+                        } else {
+                            $("#txStatus").html("⚔️ BATTLE COMPLETE! Check your zombies for results!").removeClass("loading");
+                        }
+                    } else {
+                        $("#txStatus").html("⚔️ BATTLE LOST! No new zombie created.").removeClass("loading");
+                    }
+                    displayZombies(newIds);
+                });
+            })
+            .on("error", function (error) {
+                $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
+            });
+    });
 }
 
 function openAttackModal() {
