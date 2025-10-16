@@ -28,6 +28,7 @@
       <button class="feedKittyButton">🐱 FEED ON KITTY</button>
       <button class="levelupButton">⚡ LEVEL UP</button>
       <button class="attackButton">⚔️ BATTLE</button>
+      <button class="renameButton">✏️ RENAME</button>
     </div>
 
     <div id="txStatus"></div>
@@ -92,6 +93,19 @@
       <div class="modal-buttons">
         <button class="btn-cancel" onclick="closeAttackModal()">CANCEL</button>
         <button class="btn-submit" onclick="submitAttack()">ATTACK!</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="renameModal" class="modal">
+    <div class="modal-content">
+      <h2>✏️ RENAME ZOMBIE</h2>
+      <p style="text-align: center; color: #00d4ff; margin-bottom: 20px;">Rename your zombie (Requires Level 1+)</p>
+      <input type="number" id="renameZombieId" placeholder="Enter Zombie ID..." min="0">
+      <input type="text" id="newZombieName" placeholder="Enter New Name..." maxlength="32">
+      <div class="modal-buttons">
+        <button class="btn-cancel" onclick="closeRenameModal()">CANCEL</button>
+        <button class="btn-submit" onclick="submitRename()">RENAME</button>
       </div>
     </div>
   </div>

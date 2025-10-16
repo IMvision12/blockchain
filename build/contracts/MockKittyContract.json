@@ -6140,12 +6140,12 @@
     "1337": {
       "events": {},
       "links": {},
-      "address": "0x390e43B204c3d388D63e284B499F473D5D12CeBD",
-      "transactionHash": "0x7e71c65be06f40613de860d35190978f18fa565880c4521fd08db9e7195ac062"
+      "address": "0xd3CfA54bB79336333b10dbF3594D55a20b5EC0a4",
+      "transactionHash": "0x7b249fc2296ecb5a613209c269f230350decff0f5a65ee12af303529177b1c23"
     }
   },
   "schemaVersion": "3.4.4",
-  "updatedAt": "2025-10-16T20:03:20.546Z",
+  "updatedAt": "2025-10-16T20:10:06.160Z",
   "networkType": "ethereum",
   "devdoc": {
     "methods": {},

@@ -9,7 +9,7 @@ const levelupButton = document.querySelector('.levelupButton');
 const attackButton = document.querySelector('.attackButton');
 
 function startApp() {
-    var cryptoZombiesAddress = "0xcEd509635abDC67e57C178309CDA362DA2CcB809"
+    var cryptoZombiesAddress = "0xEd8438904FAb05B698A5553f25B6ec4A5B1336D9"
     cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
 
     // Load stored parent relationships
@@ -277,6 +277,42 @@ function submitAttack() {
     }
 }
 
+function renameZombie(zombieId, newName) {
+    $("#txStatus").html("✏️ RENAMING ZOMBIE #" + zombieId + "...").addClass("loading");
+    return cryptoZombies.methods.changeName(zombieId, newName)
+        .send({ from: userAccount })
+        .on("receipt", function (receipt) {
+            $("#txStatus").html("✅ ZOMBIE #" + zombieId + " RENAMED TO " + newName.toUpperCase() + "!").removeClass("loading");
+            getZombiesByOwner(userAccount).then(displayZombies);
+        })
+        .on("error", function (error) {
+            $("#txStatus").html("❌ ERROR: " + error.message).removeClass("loading");
+        });
+}
+
+function openRenameModal() {
+    document.getElementById('renameModal').classList.add('active');
+    document.getElementById('renameZombieId').focus();
+}
+
+function closeRenameModal() {
+    document.getElementById('renameModal').classList.remove('active');
+    document.getElementById('renameZombieId').value = '';
+    document.getElementById('newZombieName').value = '';
+}
+
+function submitRename() {
+    var zombieId = document.getElementById('renameZombieId').value;
+    var newName = document.getElementById('newZombieName').value.trim();
+
+    if (zombieId !== "" && newName !== "") {
+        closeRenameModal();
+        renameZombie(parseInt(zombieId), newName);
+    } else {
+        alert('Please enter both Zombie ID and New Name!');
+    }
+}
+
 // Add Enter key support for input fields only
 document.getElementById('zombieName').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
@@ -320,6 +356,20 @@ document.getElementById('targetZombieId').addEventListener('keypress', function 
     }
 });
 
+document.getElementById('renameZombieId').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        document.getElementById('newZombieName').focus();
+    }
+});
+
+document.getElementById('newZombieName').addEventListener('keypress', function (e) {
+    if (e.key === 'Enter') {
+        e.preventDefault();
+        submitRename();
+    }
+});
+
 window.addEventListener('load', async () => {
     if (window.ethereum) {
         window.web3 = new Web3(ethereum);
@@ -360,3 +410,11 @@ feedKittyButton.addEventListener('click', openFeedKittyModal);
 levelupButton.addEventListener('click', openLevelupModal);
 
 attackButton.addEventListener('click', openAttackModal);
+
+// Add rename button listener with null check
+const renameBtn = document.querySelector('.renameButton');
+if (renameBtn) {
+    renameBtn.addEventListener('click', openRenameModal);
+} else {
+    console.error('Rename button not found!');
+}
