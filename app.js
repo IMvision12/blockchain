@@ -12,13 +12,11 @@ function startApp() {
     var cryptoZombiesAddress = "0xEd8438904FAb05B698A5553f25B6ec4A5B1336D9"
     cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
 
-    // Load stored parent relationships
     const stored = localStorage.getItem('zombieParents');
     if (stored) {
         zombieParents = JSON.parse(stored);
     }
 
-    // Load stored battle zombies
     const storedBattle = localStorage.getItem('battleZombies');
     if (storedBattle) {
         battleZombies = JSON.parse(storedBattle);
@@ -107,15 +105,13 @@ function createRandomZombie(name) {
 function feedOnKitty(zombieId, kittyId) {
     $("#txStatus").html("🐱 FEEDING ZOMBIE #" + zombieId + " WITH KITTY #" + kittyId + "...").addClass("loading");
 
-    // Get parent zombie name first
     getZombieDetails(zombieId).then(function (parentZombie) {
         cryptoZombies.methods.feedOnKitty(zombieId, kittyId)
             .send({ from: userAccount })
             .on("receipt", function (receipt) {
-                // Store parent info for the new zombie
                 getZombiesByOwner(userAccount).then(function (ids) {
-                    const newZombieId = ids[ids.length - 1]; // The newest zombie
-                    zombieParents[newZombieId] = zombieId; // Store parent ID
+                    const newZombieId = ids[ids.length - 1];
+                    zombieParents[newZombieId] = zombieId;
                     localStorage.setItem('zombieParents', JSON.stringify(zombieParents));
 
                     $("#txStatus").html("✅ HYBRID ZOMBIE CREATED FROM " + parentZombie.name.toUpperCase() + " (ID: " + zombieId + ")! Check your zombies!").removeClass("loading");
@@ -219,17 +215,14 @@ function submitFeedKitty() {
 function attack(attackerZombieId, targetZombieId) {
     $("#txStatus").html("⚔️ ZOMBIE #" + attackerZombieId + " ATTACKING ZOMBIE #" + targetZombieId + "...").addClass("loading");
 
-    // Get current zombie count before battle
     getZombiesByOwner(userAccount).then(function (currentIds) {
         const zombieCountBefore = currentIds.length;
 
         return cryptoZombies.methods.attack(attackerZombieId, targetZombieId)
             .send({ from: userAccount })
             .on("receipt", function (receipt) {
-                // Check if new zombie was created
                 getZombiesByOwner(userAccount).then(function (newIds) {
                     if (newIds.length > zombieCountBefore) {
-                        // Find the new zombie ID (the one not in the previous list)
                         const newZombieId = newIds.find(id => !currentIds.includes(id));
                         if (newZombieId !== undefined) {
                             battleZombies[newZombieId] = { attacker: attackerZombieId, target: targetZombieId };
@@ -313,7 +306,6 @@ function submitRename() {
     }
 }
 
-// Add Enter key support for input fields only
 document.getElementById('zombieName').addEventListener('keypress', function (e) {
     if (e.key === 'Enter') {
         e.preventDefault();
@@ -411,7 +403,6 @@ levelupButton.addEventListener('click', openLevelupModal);
 
 attackButton.addEventListener('click', openAttackModal);
 
-// Add rename button listener with null check
 const renameBtn = document.querySelector('.renameButton');
 if (renameBtn) {
     renameBtn.addEventListener('click', openRenameModal);

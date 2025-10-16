@@ -195,8 +195,26 @@ This project includes several enhancements beyond the standard CryptoZombies tut
 5. Wait for battle result
 6. Check your zombies - stats and new zombie (if won) will appear!
 
+### 7. Zombie Rename System
+- **✏️ Rename Functionality** - Change any zombie's name using their unique ID
+- **Level 1+ Requirement** - Zombies can be renamed once they reach level 1 (all zombies start at level 1)
+- **Smart Contract Integration** - Uses the `changeName` function from ZombieHelper contract
+- **Beautiful Rename Modal** - Clean UI for entering zombie ID and new name
+- **Real-time Updates** - Zombie names update immediately after successful transaction
+- **Enter Key Support** - Press Enter to navigate between fields and submit
+- **Input Validation** - Ensures both zombie ID and new name are provided
+- **Transaction Feedback** - Shows loading state and success/error messages
+- **Persistent Names** - Names are stored permanently on the blockchain
+
+**How to Rename:**
+1. Click **✏️ RENAME** button
+2. Enter the zombie's ID you want to rename
+3. Enter the new name (max 32 characters)
+4. Click "RENAME" or press Enter
+5. Confirm transaction in MetaMask
+6. Wait for confirmation - zombie name will update automatically!
+
 ### Future Enhancement Ideas:
-- ⚔️ Zombie battle mechanics
 - 🏪 Zombie marketplace for trading
 - 📊 Leaderboard and statistics
 - 🎁 Reward system for battles
