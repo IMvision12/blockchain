@@ -1,3 +1,9 @@
+# Team Info:
+1. Gitesh Chawda - 883423519 - chawdagitesh@csu.fullerton.edu
+2. Navjyot Singh - 807516612 - navjyotsingh@csu.fullerton.edu
+3. Chadhar Rathi - 828640557 - chandar@csu.fullerton.edu
+4. Pratham Patel - 881907893 - patelpratham1208@csu.fullerton.edu
+   
 # 🧟 CryptoZombies - Blockchain Game
 
 A decentralized application (DApp) built with Solidity smart contracts where you can create, collect, and battle zombies on the Ethereum blockchain.
